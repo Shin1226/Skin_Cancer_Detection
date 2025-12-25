@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detection Results - Skin Cancer</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #FFD6BA, #FFDCDC);
+      color: #4A3C3C;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      width: 95%;
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    h1 {
+      color: #A04040;
+      margin-bottom: 40px;
+      font-weight: 700;
+      font-size: 2.8em;
+      text-align: center;
+    }
+    .row-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .column-box {
+      flex: 1;
+      min-width: 300px;
+      background-color: #FFF2EB;
+      border: 2px solid #FFE8CD;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .column-box h2 {
+      color: #A04040;
+      font-size: 1.6em;
+      margin-bottom: 15px;
+    }
+    .image-preview img, .grad-cam-item img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .grad-cam-item p {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #7f8c8d;
+    }
+    .result-box {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background-color: #FFF2EB;
+      border: 2px solid #FFE8CD;
+      border-radius: 15px;
+      padding: 25px;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      color: #A04040;
+      margin-bottom: 15px;
+      font-size: 1.8em;
+    }
+    .label-box {
+      background-color: #E6F9E6;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #3C6340;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .confidence, .processing-time {
+      font-weight: bold;
+    }
+    .back-button {
+      text-align: center;
+    }
+    .back-button a {
+      background-color: #A04040;
+      color: #fff;
+      padding: 15px 35px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1em;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .back-button a:hover {
+      background-color: #8A3030;
+      transform: translateY(-3px);
+    }
+    @media (max-width: 768px) {
+      .row-top {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Skin Cancer Detection Results</h1>
+
+  <div class="row-top">
+    <!-- A: Gambar -->
+    <div class="column-box">
+      <h2>Uploaded Skin Image</h2>
+      <div class="image-preview">
+        <img src="{{ image_path }}" alt="Uploaded Skin Image">
+      </div>
+    </div>
+
+    <!-- B: Grad-CAM -->
+    <div class="column-box">
+      <h2>Grad-CAM Visualizations</h2>
+      <p>Highlighted areas indicate regions most influential for prediction.</p>
+      <div class="grad-cam-item">
+        {% if efficientnet_grad_cam_path %}
+          <img src="{{ efficientnet_grad_cam_path }}" alt="Grad-CAM Visualization">
+          <p>This visualization helps to understand the focus of the model.</p>
+        {% else %}
+          <p class="grad-cam-not-available">Grad-CAM Not Available</p>
+          <p style="font-size: 0.85em;">(Maybe due to model architecture or prediction confidence.)</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Prediction Results -->
+  <div class="result-box">
+    {% for model, result in results.items() %}
+    <div class="card">
+      <h2>{{ model }}</h2>
+      <p><strong>Predicted Label:</strong></p>
+      <p class="label-box">{{ result.label }}</p>
+      <p><strong>Confidence:</strong> <span class="confidence">{{ result.confidence }}</span></p>
+      <p><strong>Processing Time:</strong> <span class="processing-time">{{ result.time }}</span></p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="back-button">
+    <a href="{{ url_for('index') }}">Perform Another Detection</a>
+  </div>
+</div>
+</body>
+</html>

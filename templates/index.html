@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Cancer Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* User's provided colors for subtle background gradient / light elements */
+            --light-peach-pink: #FFDCDC; /* FFDCDC */
+            --very-light-peach: #FFF2EB; /* FFF2EB */
+            --light-orange-peach: #FFE8CD; /* FFE8CD */
+            --warm-peach: #FFD6BA; /* FFD6BA */
+
+            /* Derived colors for text, main elements, and accents */
+            --primary-text-color: #4A3C3C; /* Dark brown/grey for main text and headers */
+            --secondary-text-color: #7f8c8d; /* Lighter grey for descriptions */
+            --card-background: #ffffff; /* Pure white for stark contrast with gradient */
+            --border-color: #e0e6ed; /* Light grey border */
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+
+            /* Gradient for body background and primary buttons */
+            --gradient-start: var(--warm-peach); /* Start with a warmer peach */
+            --gradient-end: var(--light-peach-pink); /* End with the pinkish light */
+
+            /* Main accent color for buttons (Choose File, Back) */
+            --button-primary-color: #A04040; /* A muted, deeper reddish-brown for primary action */
+            --button-primary-hover: #8A3030; /* Darker hover state */
+
+            /* Accent for submit button (Analyze Image) */
+            --submit-button-color: #608266; /* A desaturated green for emphasis */
+            --submit-button-hover: #4F6B52; /* Darker hover state */
+
+            /* Flash message colors */
+            --flash-background: #ffe0b2; /* Light orange for warning */
+            --flash-text: #e65100; /* Dark orange text */
+            --flash-border: #ffcc80;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            background-size: 200% 200%;
+            animation: gradientAnimation 10s ease infinite;
+            color: var(--primary-text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Hide overflow from gradient animation */
+            box-sizing: border-box;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            background-color: var(--card-background);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px var(--shadow-medium);
+            text-align: center;
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--button-primary-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.8em;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: var(--secondary-text-color);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .upload-section {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 35px;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            background-color: var(--very-light-peach); /* Using one of your light colors */
+        }
+
+        .upload-section:hover {
+            border-color: var(--button-primary-color);
+            box-shadow: 0 0 15px var(--shadow-light);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            background-color: var(--button-primary-color); /* Solid color for upload button */
+            display: inline-block;
+            padding: 15px 35px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            font-size: 1.1em;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .custom-file-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background-color: var(--button-primary-hover);
+        }
+
+        .file-name {
+            margin-top: 20px;
+            font-style: italic;
+            color: var(--secondary-text-color);
+            font-size: 0.95em;
+            word-break: break-word; /* Handle long file names */
+        }
+
+        button[type="submit"] {
+            background-color: var(--submit-button-color);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--submit-button-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .flash-messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .flash-messages li {
+            background-color: var(--flash-background);
+            color: var(--flash-text);
+            border: 1px solid var(--flash-border);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Skin Cancer Detection</h1>
+        <p>Upload a dermoscopic image to get an instant diagnosis from our advanced deep learning models.</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+            <div class="upload-section">
+                <label for="file-upload" class="custom-file-upload">
+                    Choose Image File
+                </label>
+                <input id="file-upload" type="file" name="file" accept="image/*" required>
+                <div class="file-name" id="selected-file-name">No file chosen</div>
+            </div>
+            <button type="submit">Analyze Image</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('file-upload').onchange = function() {
+            var fileName = this.files[0] ? this.files[0].name : "No file chosen";
+            document.getElementById('selected-file-name').textContent = fileName;
+        };
+    </script>
+</body>
+</html>
